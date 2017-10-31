@@ -294,4 +294,104 @@ func main() {
 	// x := 1
 	// test(x): lead to a compile error: cannot use x (type int) as type MonthType in argument to test
 
+	// ways of init an array
+	// create an array with length 5, and its element values are: 1, 2, 3, 4, 5.
+	arr1 := [5]int{1, 2, 3, 4, 5}
+	// way1 to loop an array
+	for index, value := range arr1 {
+		fmt.Printf("arr1[%d] = > %d\n", index, value)
+	}
+	fmt.Printf("the size of arr1 => %d\n\n", len(arr1))
+
+	/*
+		create an array with length 5, and its element values are: 1, 2, 0, 0, 0.
+		In initialization, the element without specifying the initial value will be assigned to the default
+		value of int of its element type, and the default value of the string is""
+	*/
+	arr2 := [5]int{1, 2}
+	// way2 to loop an array
+	for index := 0; index < len(arr2); index++ {
+		fmt.Printf("arr2[%d] = > %d\n", index, arr2[index])
+	}
+	fmt.Printf("the size of arr2 => %d\n\n", len(arr2))
+
+	/*
+		create an array with length 4, and its element values are: 1, 2, 3, 4.
+		Its length is determined by the number of elements specified at initialization
+	*/
+	arr3 := [...]int{1, 2, 3, 4}
+	for index := 0; index < len(arr3); index++ {
+		fmt.Printf("arr3[%d] = > %d\n", index, arr3[index])
+	}
+	fmt.Printf("the size of arr3 => %d\n\n", len(arr3))
+
+	/*
+		create an array with length 6, and its element values are key-values: 0:0, 0:0, 2:1, 3:2, 4:3, 0:0.
+		Its length is determined by the given size, and the unrefered key-value is 0:0.
+	*/
+	arr4 := [6]int{2: 1, 3: 2, 4: 3}
+	for index := 0; index < len(arr4); index++ {
+		fmt.Printf("arr4[%d] = > %d\n", index, arr4[index])
+	}
+	fmt.Printf("the size of arr4 => %d\n\n", len(arr4))
+
+	/*
+		create an array with length 5, and its element values are key-values: 0:0, 0:0, 2:1, 3:2, 4:3.
+		Its length is determined by the max index of the key.
+	*/
+	arr5 := [...]int{2: 1, 3: 2, 4: 3}
+	for index := 0; index < len(arr5); index++ {
+		fmt.Printf("arr5[%d] = > %d\n", index, arr5[index])
+	}
+	fmt.Printf("the size of arr5 => %d\n\n", len(arr5))
+
+	// An array is a value type. When an array is assigned to another array, a new element is copied.
+	arr6 := [4]int{1, 56, 0, -19}
+	fmt.Printf("arr6 => %d, and address of arr6 is %v\n", arr6, &arr6[0]) // can not use &arr6, why?
+	arr7 := arr6
+	fmt.Printf("arr7 => %d, and address of arr7 is %v\n", arr7, &arr7[0])
+	arr7[0] = arr7[1] + arr7[3]
+	fmt.Printf("after assign & calc, arr6 => %d, and address of arr6 is %v\n", arr6, &arr6[0])
+	fmt.Printf("after assign & calc, arr7 => %d, and address of arr7 is %v\n\n", arr7, &arr7[0])
+
+	/*
+	   Slice: slice is a reference type.
+	   There are 2 ways to create a slice, one is by array, another is by make()
+	*/
+	// by array, [] means that this is a slice, len == cap == 3
+	s1 := []int{1, 2, 3}
+	fmt.Printf("len of s1 => %d, cap of s1 => %d\n", len(s1), cap(s1))
+
+	// s2 is reference of arr7
+	fmt.Printf("arr7 => %d\n", arr7)
+	s2 := arr7[:]
+	fmt.Printf("s2 := arr7[:], len of s2 => %d, cap of s2 => %d, s2 =>%d\n", len(s2), cap(s2), s2)
+
+	// [start:end], includes start .. end -1, not includes end.
+	s3 := arr7[1:2]
+	fmt.Printf("s3 := arr7[1:2], len of s3 => %d, cap of s3 => %d, s3 =>%d\n", len(s3), cap(s3), s3)
+
+	// [:end], the same to [0:end]
+	s4 := arr7[:3]
+	fmt.Printf("s4 := arr7[:3], len of s4 => %d, cap of s4 => %d, s4 =>%d\n", len(s4), cap(s4), s4)
+
+	// [start:], the same to [start:end+1], notice that this will include the last index.
+	s5 := arr7[2:]
+	fmt.Printf("s5 := arr7[2:], len of s5 => %d, cap of s5 => %d, s5 =>%d\n", len(s5), cap(s5), s5)
+
+	// s :=make([]int,len,cap)
+	s6 := make([]int, 3, 7)
+	fmt.Printf("len of s6 => %d, cap of s6 => %d, s6 =>%d\n", len(s6), cap(s6), s6)
+
+	// s7 := make([]int{4, 8, 12}, 3, 7), try to init the data when create a slice, will lead to a compile error.
+	s7 := make([]int, 3, 7)
+	fmt.Printf("len of s7 => %d, cap of s7 => %d, s7 =>%d\n", len(s7), cap(s7), s7)
+	// s7 := append(s7, 11, 12, 13, 14, 15) will lead to a compile error.
+	// cap of s8 is 14, doube of s7
+	s8 := append(s7, 11, 12, 13, 14, 15)
+	fmt.Printf("len of s8 => %d, cap of s8 => %d, s8 =>%d\n", len(s8), cap(s8), s8)
+
+	// cap of s9 is 21, three times of s7
+	s9 := append(s7, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22)
+	fmt.Printf("len of s9 => %d, cap of s9 => %d, s9 =>%d\n", len(s9), cap(s9), s9)
 }
