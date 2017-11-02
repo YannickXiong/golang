@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"unsafe"
+	// "verify" go files under the same dir or package can be refered by each other, no need to import package.
+	// And first letter of func name capital is not a must.
 )
 
 // the default value of var int is 0
@@ -477,5 +479,10 @@ func main() {
 	fmt.Printf("address of slice 2 (address of slice struct) => %p\n", &slice2)
 	// verify the Dilatancy principle again, cap of slice2 should be 20.
 	fmt.Printf("len of slice2 => %d, cap of slice2 => %d, slice2 => %d\n\n", len(slice2), cap(slice2), slice2)
+
+	// called verify in verify.go
+	fmt.Println("Now begin to call verify() in verify.go ..")
+	Verify()
+	fmt.Println("Call verify() end ..")
 
 }
