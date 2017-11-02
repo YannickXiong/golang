@@ -103,3 +103,7 @@ ENV/
 # debug
 .debug
 debug
+
+# windows
+*.exe
+*.exe*

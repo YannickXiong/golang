@@ -15,7 +15,10 @@ Inorder to study the reltaionship of that what's the address of an array, and wh
 	- what's the address of a slice itself?
 	- what's the address which a slice refers to an actual array?
 */
-func Verify() {
+func SliceArrayAddrVerify() {
+
+	fmt.Println("## SliceArrayAddrVerify() called begin ..")
+
 	array1 := []int{10, 11, 12, 13, 14}
 	fmt.Printf("%p\n", &array1)
 	fmt.Printf("%p\n", &array1[0]) // address of array1
@@ -35,4 +38,8 @@ func Verify() {
 	fmt.Printf("%d\n", *&slice1[0]) // value of slice1, actually is array1[0]
 	fmt.Printf("%d\n\n", slice1)    // value of slice1, actually is array1
 	// fmt.Printf("%d\n\n", *slice1)   // runntime error, not compile error
+
+	fmt.Println("## SliceArrayAddrVerify() called end ..")
+	fmt.Println()
+
 }
