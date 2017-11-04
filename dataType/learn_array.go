@@ -4,10 +4,10 @@ import (
 	"fmt"
 )
 
-//ArrayVerify : to verify some features of an array data struct.
-func ArrayVerify() {
+//LearnArray : to verify some features of an array data struct.
+func LearnArray() {
 
-	fmt.Println("## ArrayVerify() called begin ..")
+	fmt.Println("## LearnArray() called begin ..")
 
 	// ways of init an array
 	// create an array with length 5, and its element values are: 1, 2, 3, 4, 5.
@@ -91,6 +91,6 @@ func ArrayVerify() {
 		fmt.Printf("\n")
 	}
 	fmt.Printf("\n")
-	fmt.Println("## ArrayVerify() called end ..")
+	fmt.Println("## LearnArray() called end ..")
 	fmt.Println()
 }

@@ -4,10 +4,10 @@ import (
 	"fmt"
 )
 
-// IOtaVerify : to verify some features of an iota data struct.
-func IotaVerify() {
+// LearnIota : to verify some features of an iota data struct.
+func LearnIota() {
 
-	fmt.Println("## IotaVerify() called begin ..")
+	fmt.Println("## LearnIota() called begin ..")
 
 	// iota
 	// fmt.Println(iota) will lead to a compile error, because iota can be only used with const.
@@ -131,7 +131,7 @@ func IotaVerify() {
 	// x := 1
 	// test(x): lead to a compile error: cannot use x (type int) as type MonthType in argument to test
 
-	fmt.Println("## IotaVerify() called end ..")
+	fmt.Println("## LearnIota() called end ..")
 	fmt.Println()
 
 }

@@ -91,10 +91,10 @@ func Test(m MonthType) {}
 	data, i := [3]int{0, 1, 2}
 */
 
-// BaseDataTyepVerify : to verify some basic features of basic data type struct.
-func BaseDataTyepVerify() {
+// LearnBasicDataType : to verify some basic features of basic data type struct.
+func LearnBasicDataType() {
 
-	fmt.Println("## BaseDataTyepVerify() called begin ..")
+	fmt.Println("## LearnBasicDataType() called begin ..")
 
 	/*
 		fmt.Println("var x1 int => %d", x1) work normally, but vet will generate a warming as below.
@@ -179,6 +179,6 @@ func BaseDataTyepVerify() {
 	x2 := 30
 	fmt.Printf("after 'x2 := 30' in a function, he address, value of x2 => %v, %d, \n\n", &x2, x2)
 
-	fmt.Println("## BaseDataTyepVerify() called end ..")
+	fmt.Println("## LearnBasicDataType() called end ..")
 	fmt.Println()
 }

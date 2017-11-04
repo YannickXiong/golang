@@ -4,10 +4,10 @@ import (
 	"fmt"
 )
 
-// SliceVerify : to verify some feature of a slice data struct.
-func SliceVerify() {
+// LearnSlice : to verify some feature of a slice data struct.
+func LearnSlice() {
 
-	fmt.Println("## SliceVerify() called begin ..")
+	fmt.Println("## LearnSlice() called begin ..")
 
 	/*
 	   Slice: slice is a reference type.
@@ -119,7 +119,7 @@ func SliceVerify() {
 	// verify the Dilatancy principle again, cap of slice2 should be 20.
 	fmt.Printf("len of slice2 => %d, cap of slice2 => %d, slice2 => %d\n\n", len(slice2), cap(slice2), slice2)
 
-	fmt.Println("## SliceVerify() called end ..")
+	fmt.Println("## LearnSlice() called end ..")
 	fmt.Println()
 
 }

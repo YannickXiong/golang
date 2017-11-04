@@ -1,9 +1,9 @@
 package main
 
 func main() {
-	BaseDataTyepVerify()
-	IotaVerify()
-	ArrayVerify()
-	SliceArrayAddrVerify()
-	SliceArrayAddrVerify()
+	LearnBasicDataType()
+	LearnIota()
+	LearnArray()
+	LearnSlice()
+	LearnSliceArrayAddress()
 }
