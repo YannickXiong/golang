@@ -39,44 +39,152 @@ type AudiCar struct {
 
 // BenZCar : has price, carName, seatNum and color
 type BenZCar struct {
-	Car     // anonymous ttribute
-	seatNum int
-	color   string
-}
-
-// VWCar : has price, carName, seatNum and wheelsSize
-type VWCar struct {
 	Car        // anonymous ttribute
 	seatNum    int
 	wheelsSize float32
 }
 
+// VWCar : has price, carName, seatNum and wheelsSize
+type VWCar struct {
+	Car     // anonymous ttribute
+	seatNum int
+	color   string
+}
+
 // AudiInterface : has 4 methods
 type AudiInterface interface {
 	ShowColor()
-	GetPrice()
-	GetDiscountPrice(discount float32)
+	ShowPrice()
+	ShowDiscountPrice(discount float32)
 	ShowWheelsSize()
 }
 
 // BenZInterface : has 4 methods
 type BenZInterface interface {
 	ShowSeatNum()
-	GetPrice()
-	GetDiscountPrice(discount float32)
+	ShowPrice()
+	ShowDiscountPrice(discount float32)
 	ShowWheelsSize()
 }
 
 // VWInterface : has 4 methods
 type VWInterface interface {
 	ShowColor()
-	GetPrice()
-	GetDiscountPrice(discount float32)
+	// ShowPrice()
+	ShowDiscountPrice(discount float32)
 	ShowWheelsSize()
+}
+
+// ShowPrice : type Car implements ShowPrice
+func (car *Car) ShowPrice() {
+	fmt.Printf("Car::ShowPrice => %.2f\n", car.price)
+}
+
+// ShowColor : type AudiCar implements ShowColor
+func (audiCar *AudiCar) ShowColor() {
+	fmt.Printf("AudiCar::color => %s\n", audiCar.color)
+}
+
+// ShowPrice : type AudiCar implements ShowPrice
+// Also overwirte Car.ShowPrice. Attention that in go func cannot be overwritten.
+func (audiCar *AudiCar) ShowPrice() {
+	// audiCar.Car.price == audiCar.price
+	// fmt.Printf("AudiCar::price => %.2f\n", audiCar.Car.price)
+	fmt.Printf("AudiCar::price => %.2f\n", audiCar.price)
+}
+
+// ShowDiscountPrice : type AudiCar implements ShowDiscountPrice
+func (audiCar *AudiCar) ShowDiscountPrice(discount float32) {
+	//fmt.Printf("AudiCar::discount Price => %.2f\n", audiCar.Car.price*discount)
+	fmt.Printf("AudiCar::discount Price => %.2f(discount:%.2f)\n", audiCar.price*discount, discount)
+}
+
+// ShowWheelsSize : type AudiCar implements ShowWheelsSize
+func (audiCar *AudiCar) ShowWheelsSize() {
+	fmt.Printf("AudiCar::wheelsSize => %.1f\n", audiCar.wheelsSize)
+}
+
+// ShowSeatNum : type BenZCar implements ShowSeatNum
+func (benzCar *BenZCar) ShowSeatNum() {
+	fmt.Printf("BenZCar::seatNum => %d\n", benzCar.seatNum)
+}
+
+// // BenZInterface defined interface ShowPrice, while type BenZCar does not implement it.
+// // So it will usd the Car.ShowPrice or not?
+// // The answer is Yes! benzCar.ShowPrice() => result: Car::ShowPrice => 688888.00
+// // ShowPrice : type BenZCar implements ShowPrice
+// func (benzCar *BenZCar)ShowPrice(){
+// 	fmt.Printf("BenZCar::price => %.2f\n", benzCar.price)
+// }
+
+// ShowDiscountPrice : type AudiCar implements ShowDiscountPrice
+func (benzCar *BenZCar) ShowDiscountPrice(discount float32) {
+	//fmt.Printf("BenZCar::discount Price => %.2f\n", BenZCar.Car.price*discount)
+	fmt.Printf("BenZCar::discount Price => %.2f(discount:%.2f)\n", benzCar.price*discount, discount)
+}
+
+// ShowWheelsSize : type AudiCar implements ShowWheelsSize
+func (benzCar *BenZCar) ShowWheelsSize() {
+	fmt.Printf("BenZCar::wheelsSize => %.1f\n", benzCar.wheelsSize)
+}
+
+// ShowColor : type VWCar implements ShowColor
+func (vwCar VWCar) ShowColor() {
+	fmt.Printf("VWCar::color => %s\n", vwCar.color)
+}
+
+// ShowPrice : type VWCar implements ShowPrice
+// will leat to warming(not error): receiver name vmCar should be consistent with
+// previous receiver name vwCar for VWCar
+// Reason: does not define ShowPrice in VMCarInterface.
+// Another question: VWInterface does not define interface ShowPrice, and type VWCar
+// does not implement it.So it will usd the Car.ShowPrice or not?
+// The answer is Yes! vmCar.ShowPrice() => result: Car::ShowPrice => 151788.00
+// func (vwCar VWCar) ShowPrice() {
+// 	fmt.Printf("VWCar::price => %.2f\n", vwCar.price)
+// }
+
+// ShowDiscountPrice : type VMCar implements ShowDiscountPrice
+func (vwCar VWCar) ShowDiscountPrice(discount float32) {
+	//fmt.Printf("VWCar::discount Price => %.2f\n", vwCar.Car.price*discount)
+	fmt.Printf("VWCar::discount Price => %.2f(discount:%.2f)\n", vwCar.price*discount, discount)
+}
+
+// ShowSeatNum : type VMCar implements ShowSeatNum
+func (vwCar VWCar) ShowSeatNum() {
+	fmt.Printf("VWCar::seatNum => %d\n", vwCar.seatNum)
 }
 
 // LearnInterface :
 func LearnInterface() {
 	fmt.Println("## LearnInterface() called begin ..")
+
+	// the fellow way of init audiCar will lead compile error.
+	// audiCar := AudiCar{789998.00, "Audo Q7-Vx", 4, "White"}
+	fmt.Println("***** AudiCar Info ***** ")
+	audiCar := &AudiCar{Car{786999.00, "Audi Q7 VVx-honor"}, 17.1, "White"}
+	audiCar.ShowPrice()
+	audiCar.ShowDiscountPrice(0.88)
+	audiCar.ShowWheelsSize()
+	audiCar.ShowColor()
+
+	fmt.Println("***** BenZCar Info ***** ")
+	// benzCar is value type, not reference of BenZCar{Car{688888.00, "BenZ GLK-4000"}, 6, 15.8}
+	// however, it can be used benzCar.ShowPrice() whose receiver is a reference type.
+	// Attention that normal function can not be used like this.
+	// About this, details see learn_method.go
+	benzCar := BenZCar{Car{688888.00, "BenZ GLK-4000"}, 6, 15.8}
+	benzCar.ShowPrice()
+	benzCar.ShowDiscountPrice(0.68)
+	benzCar.ShowWheelsSize()
+	benzCar.ShowSeatNum()
+
+	fmt.Println("***** VWCar Info ***** ")
+	vwCar := &VWCar{Car{151788.00, "Golf-1.2T"}, 5, "Red"}
+	vwCar.ShowPrice()
+	vwCar.ShowDiscountPrice(0.95)
+	vwCar.ShowSeatNum()
+	vwCar.ShowColor()
+
 	fmt.Println("## LearnInterface() called end ..")
 }
