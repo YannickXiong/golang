@@ -2,7 +2,7 @@
  * @Author : Yannick
  * @File   : learn_map.go
  * @Date   : 2017-11-08
- * @Desc   : This is a demo which I could learn golang through it.
+ * @Desc   : This is a demo which I could learn golang map through it.
  */
 
 package main
@@ -56,9 +56,11 @@ func LearnMap() {
 		"ForestGreen": "#228b22",
 	}
 
+	fmt.Printf("The origin map info: webColors => \n")
 	for key, value := range webColors {
 		fmt.Printf("Key: %s  Value: %s\n", key, value)
 	}
+	fmt.Println(" ")
 
 	// remove an element from a map
 	delete(webColors, "Coral")
@@ -67,10 +69,45 @@ func LearnMap() {
 		fmt.Printf("Key: %s  Value: %s\n", key, value)
 	}
 
+	fmt.Println(" ")
 	// delete a not exist key-value
 	delete(webColors, "blue")
 
-	// map used as function arguments
+	// when used a map as function arguments, it'd better to use a reference rather than a value.
+	// RemoveColor
+
+	/*
+		   Note: only anonymous function can be defineted inner a func.
+		   Below will lead a run time error.
+			func RemoveColor(colors map[string]string, key string) {
+				delete(colors, key)
+			}
+	*/
+
+	// an anonymous func, below is ok(not used, will lead not used error.)
+	// func(colors map[string]string, key string) {
+	// 	delete(colors, key)
+	// }
+
+	fmt.Println("Before RemoveColor() called, the webColors is:")
+	for key, value := range webColors {
+		fmt.Printf("Key: %s  Value: %s\n", key, value)
+	}
+
+	fmt.Println(" ")
+
+	// reference type, will change webColors itself.
+	RemoveColor(webColors, "AliceBlue")
+
+	fmt.Println("After RemoveColor(webClors, \"AliceBlue\") called, the webColors is:")
+	for key, value := range webColors {
+		fmt.Printf("Key: %s  Value: %s\n", key, value)
+	}
 
 	fmt.Println("## LearnMap() called end ..")
+}
+
+// RemoveColor :
+func RemoveColor(colors map[string]string, key string) {
+	delete(colors, key)
 }

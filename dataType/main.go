@@ -13,5 +13,8 @@ func main() {
 	// LearnArray()
 	// LearnSlice()
 	// LearnSliceArrayAddress()
-	LearnMap()
+	// LearnMap()
+	// LearnAnonymousFunc()
+	// LearnMethod()
+	LearnInterface()
 }

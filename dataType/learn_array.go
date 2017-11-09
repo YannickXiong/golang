@@ -2,7 +2,7 @@
  * @Author : Yannick
  * @File   : learn_array.go
  * @Date   : 2017-11-08
- * @Desc   : This is a demo which I could learn golang through it.
+ * @Desc   : This is a demo which I could learn golang array through it.
  */
 
 package main

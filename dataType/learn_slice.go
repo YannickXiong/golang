@@ -2,7 +2,7 @@
  * @Author : Yannick
  * @File   : learn_slice.go
  * @Date   : 2017-11-08
- * @Desc   : This is a demo which I could learn golang through it.
+ * @Desc   : This is a demo which I could learn golang slice through it.
  */
 
 package main
