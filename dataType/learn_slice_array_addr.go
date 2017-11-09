@@ -1,3 +1,10 @@
+/**
+ * @Author : Yannick
+ * @File   : learn_slice_array_addr.go
+ * @Date   : 2017-11-08
+ * @Desc   : This is a demo which I could learn golang through it.
+ */
+
 package main
 
 import (
@@ -20,7 +27,7 @@ func LearnSliceArrayAddress() {
 	fmt.Println("## LearnSliceArrayAddress() called begin ..")
 
 	array1 := []int{10, 11, 12, 13, 14}
-	fmt.Printf("%p\n", &array1)
+	fmt.Printf("%p\n", &array1)    // what's this?
 	fmt.Printf("%p\n", &array1[0]) // address of array1
 	fmt.Printf("%p\n\n", array1)   // address of array1
 

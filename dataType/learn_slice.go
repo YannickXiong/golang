@@ -1,3 +1,10 @@
+/**
+ * @Author : Yannick
+ * @File   : learn_slice.go
+ * @Date   : 2017-11-08
+ * @Desc   : This is a demo which I could learn golang through it.
+ */
+
 package main
 
 import (
@@ -14,6 +21,15 @@ func LearnSlice() {
 	   There are 2 ways to create a slice, one is by array, another is by make()
 	*/
 	// by array, [] means that this is a slice, len == cap == 3
+
+	// nil slice
+	var snil []int
+	fmt.Printf("nil slice: snil =>%v, len() => %d, cap() => %d, self address => %p, refers to array address => %p\n", snil, len(snil), cap(snil), &snil, snil)
+
+	// empty slice
+	sempty := make([]int, 0, 0)
+	fmt.Printf("empty slice:sempty =>%v, len() => %d, cap() => %d, self address => %p, refers to array address => %p\n", sempty, len(sempty), cap(sempty), &sempty, sempty)
+
 	s1 := []int{1, 2, 3}
 	fmt.Printf("len of s1 => %d, cap of s1 => %d\n", len(s1), cap(s1))
 
