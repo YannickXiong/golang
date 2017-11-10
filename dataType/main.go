@@ -7,5 +7,6 @@ func main() {
 	// LearnSlice()
 	// LearnSliceArrayAddress()
 
-	LearnInterface()
+	// LearnInterface()
+	LearnLogger()
 }

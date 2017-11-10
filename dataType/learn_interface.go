@@ -51,6 +51,11 @@ type VWCar struct {
 	color   string
 }
 
+// CarInterface : has 1 method
+type CarInterface interface {
+	ShowPrice()
+}
+
 // AudiInterface : has 4 methods
 type AudiInterface interface {
 	ShowColor()
@@ -72,7 +77,7 @@ type VWInterface interface {
 	ShowColor()
 	// ShowPrice()
 	ShowDiscountPrice(discount float32)
-	ShowWheelsSize()
+	ShowSeatNum()
 }
 
 // ShowPrice : type Car implements ShowPrice
@@ -173,7 +178,7 @@ func LearnInterface() {
 	// however, it can be used benzCar.ShowPrice() whose receiver is a reference type.
 	// Attention that normal function can not be used like this.
 	// About this, details see learn_method.go
-	benzCar := BenZCar{Car{688888.00, "BenZ GLK-4000"}, 6, 15.8}
+	benzCar := &BenZCar{Car{688888.00, "BenZ GLK-4000"}, 6, 15.8}
 	benzCar.ShowPrice()
 	benzCar.ShowDiscountPrice(0.68)
 	benzCar.ShowWheelsSize()
@@ -185,6 +190,78 @@ func LearnInterface() {
 	vwCar.ShowDiscountPrice(0.95)
 	vwCar.ShowSeatNum()
 	vwCar.ShowColor()
+
+	// Up to now, you think you've used the GO language interface, my answer is no, you just used method.
+	// You look back at your definition of AudiInterface, BenZInterface, VWInterface, do you use it?
+	// In GO language, if you define a variable of interface, then the variable can store
+	// any type of object that implements the interface
+
+	var ai AudiInterface // ai is AudiInterface type
+	// var bi *BenZInterface // bi is *BenZInterface
+	// bi will lead to compile error" bi.ShowPrice undefined, type *BenZInterface is pointer to interface, not interface)
+	// Explains why there's never a pointer to interface
+	var bi BenZInterface // bi is BenZInterface
+	var vi VWInterface   // vi is VWInterface
+
+	// audiCar implemented AudiInterface, so ai can story audiCar
+	ai = audiCar
+	fmt.Println("***** ai AudiCar Info ***** ")
+	ai.ShowColor()
+	ai.ShowPrice()
+	ai.ShowDiscountPrice(0.68)
+	ai.ShowWheelsSize()
+
+	// benzCar implemented BenzInterface, so bi can story benzCar
+	bi = benzCar
+	fmt.Println("***** bi BenZCar Info ***** ")
+	bi.ShowPrice()
+	bi.ShowDiscountPrice(0.68)
+	bi.ShowWheelsSize()
+	bi.ShowSeatNum()
+
+	vi = vwCar
+	fmt.Println("***** vi VWCar Info ***** ")
+	vi.ShowColor()
+	vi.ShowDiscountPrice(0.95)
+	vi.ShowSeatNum()
+	// error: vi.ShowPrice undefined (type VWInterface has no field or method ShowPrice)
+	// vi is a VWInterface, has no ShowPrice() method. While vwCar is VWCar type, has ShowPrice from anonymous member Car,
+	// is it a bit like the inheritance concept in PYTHON?
+	// vi.ShowPrice()
+
+	// ci is a CarInterface, and all audiCar, benzCar, vwCar implemented CarInterface.
+	// So ci can store all of them.
+	ci := make([]CarInterface, 3)
+	ci[0], ci[1], ci[2] = audiCar, benzCar, vwCar
+	fmt.Println("***** CarInterface::audiCar Info ***** ")
+	// audiCar.ShowPrice()
+	ci[0].ShowPrice()
+	fmt.Println("***** CarInterface::benzCar Info ***** ")
+	// BenZCar did not implement ShowPrice, call Car.ShowPrice()
+	ci[1].ShowPrice()
+	fmt.Println("***** CarInterface::vwCar Info ***** ")
+	// VWCar did not implement ShowPrice, call Car.ShowPrice()
+	ci[2].ShowPrice()
+
+	// empty interface can store any type!
+	type EmptyInterface interface{}
+
+	// var ei, epi EmptyInterface = audiCar, &audiCar
+	// which will lead error: interface conversion: main.EmptyInterface is **main.AudiCar, not *main.AudiCar
+	// think why?
+
+	var ei, epi EmptyInterface = *audiCar, &*audiCar
+	fmt.Println("***** Empty Interface::AudiCar Info ***** ")
+	// ei can store AudiCar, but cannot call ei.ShowColor(),
+	// ei.ShowColor undefined (type EmptyInterface is interface with no methods)
+	//ei.ShowColor()
+	// ei.name = "Audi Q3" : error, ei.name undefined (type EmptyInterface is interface with no methods)
+	// ei.(audiCar).carName = "Audi Q3" : error, audiCar is not a type
+	// ei.(AudiCar).carName = "Audi Q3" : error  cannot assign to ei.(AudiCar).Car.carName
+	// OK, because interface type returned a temporary object, only the pointer can modify its state
+	epi.(*AudiCar).carName = "Audi Q3"
+	fmt.Printf("ei.(AudiCar).carName=>%s\n", ei.(AudiCar).carName)
+	fmt.Printf("epi.(*AudiCar).carName=>%s\n", epi.(*AudiCar).carName)
 
 	fmt.Println("## LearnInterface() called end ..")
 }
