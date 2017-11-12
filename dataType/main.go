@@ -8,5 +8,6 @@ func main() {
 	// LearnSliceArrayAddress()
 
 	// LearnInterface()
-	LearnLogger()
+	// LearnLogger()
+	LearnStruct()
 }
