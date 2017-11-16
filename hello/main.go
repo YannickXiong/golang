@@ -9,9 +9,10 @@ package main
 
 import (
 	"fmt"
-	"learn_golang/hello/test1"
-	"learn_golang/hello/test2"
-	"learn_golang/simpleSet"
+	"golang/hello/test1"
+	"golang/hello/test2"
+	"golang/simpleSet"
+	"unsafe"
 )
 
 func main() {
@@ -35,6 +36,7 @@ func main() {
 	//fmt.Println(s1.String())
 	// both %s and %v call called s1.String()
 	fmt.Printf("%s =>, %v\n", s1, s1)
+	fmt.Printf("addr of s1 => %p, %p,%d,%d\n ", s1, &s1, unsafe.Sizeof(s1), unsafe.Sizeof(&s1))
 	set.Destroy(s1)
 	fmt.Printf("before => %p\n", s.Element)
 	s.Clear()

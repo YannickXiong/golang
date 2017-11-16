@@ -34,6 +34,7 @@ import (
 	"bytes"
 	"fmt"
 	"sync"
+	"unsafe"
 )
 
 // HashSet : key of map is an empyt interface, can store any date type.
@@ -283,6 +284,7 @@ func Destroy(self *HashSet) {
 	// in func Destroy, self is nil, while after set.Destroy(s1)
 	// s1 is not nil, and s1 is still Still {1:ture, "xyang":ture, 3.23:true},
 	// really don't understand.
+	fmt.Printf("addr of self => %p, %p,%d,%d\n ", self, &self, unsafe.Sizeof(self), unsafe.Sizeof(&self))
 	self = nil
 
 	return

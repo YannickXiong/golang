@@ -107,3 +107,4 @@ debug
 # windows
 *.exe
 *.sh
+.vscode/launch.json
