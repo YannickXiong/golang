@@ -9,5 +9,7 @@ func main() {
 
 	// LearnInterface()
 	// LearnLogger()
-	LearnStruct()
+	// LearnStruct()
+
+	LearnDefer()
 }
