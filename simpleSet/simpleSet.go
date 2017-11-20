@@ -276,7 +276,7 @@ func (set *HashSet) String() string {
 ** @Rece   : *HashSet
 ** Return  :
  */
-func Destroy(self *HashSet) {
+func Destroy(self *HashSet) *HashSet {
 	self.Lock()
 	defer self.Unlock()
 
@@ -284,10 +284,20 @@ func Destroy(self *HashSet) {
 	// in func Destroy, self is nil, while after set.Destroy(s1)
 	// s1 is not nil, and s1 is still Still {1:ture, "xyang":ture, 3.23:true},
 	// really don't understand.
-	fmt.Printf("addr of self => %p, %p,%d,%d\n ", self, &self, unsafe.Sizeof(self), unsafe.Sizeof(&self))
+
+	fmt.Printf("addr of self => %p, %p, %p, %d, %d\n ", &self.Element, self, &self, unsafe.Sizeof(self), unsafe.Sizeof(&self))
+	// output: self is the address refers to struct, the same to. &self is the addr of pointer itself.
+	// addr of s1 => 0xc42000a080, 0xc42000a080, 0xc42000c030, 8, 8
+	// addr of self => 0xc42000a080, 0xc42000a080, 0xc42000c038, 8, 8
+	// Conclusion: Destroy(self *HashSet), self is a copy of s1, but self and s1 both point the same data.
+	// this is why we can change data by modify self.Element, but cannot cannot reset s1 to nil after reset self = nil.
+	// More important is that, both value or pointer as a func argument, they are passed by value, not preferenced.
+	// If value type, copy a value; if pointer, copy a pointer.
+
+	// More details see https://studygolang.com/topics/4089.
 	self = nil
 
-	return
+	return self
 	// * HashSet
 	// fmt.Printf("type => %v\n", reflect.TypeOf(self))
 	// // nil
