@@ -11,5 +11,7 @@ func main() {
 	// LearnLogger()
 	// LearnStruct()
 
-	LearnDefer()
+	// LearnDefer()
+	// LearnSpecial()
+	LearnReflect()
 }
