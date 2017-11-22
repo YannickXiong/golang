@@ -8,6 +8,8 @@
 package main
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
 	"reflect"
 )
@@ -28,6 +30,79 @@ func (foo Foo) String() string {
 // String2 :
 func (foo *Foo) String2() string {
 	return fmt.Sprintf("Name : %s \t Age : %d\n", foo.Name, foo.Age)
+}
+
+type DB struct {
+	Host string
+	Port uint32
+	Pw   string
+}
+
+type Conf struct {
+	OpName *string `json:"jsonOpName" xml:"xmlOpName"`
+	Num    *int
+	Output *string
+	Input  *string
+	DB     // an anonymous struct
+}
+
+func (conf *Conf) ShowOpName(subname string) string {
+	return *(conf.OpName) + " " + subname
+}
+
+func (conf *Conf) GetDBConf() DB {
+	return conf.DB
+}
+
+// 场景1：遍历结构体字段名
+func PrintStructField(t *reflect.Type) {
+	// can not : ieldnum := (*t).NumField()
+	// t.NumField undefined (type *reflect.Type is pointer to interface, not interface)
+	fieldnum := (*t).NumField()
+	for i := 0; i < fieldnum; i++ {
+		fmt.Printf("conf.%v => %v\n", (*t).Field(i).Name, (*t).Field(i).Type)
+	}
+	fmt.Println()
+}
+
+// 场景2：调用结构体方法
+func CallMethod(v *reflect.Value, method string, params []interface{}) {
+	f := (*v).MethodByName(method)
+	fmt.Printf("CallMethod :: params => %v\n", params)
+	if f.IsValid() {
+		args := make([]reflect.Value, len(params))
+		for key, param := range params {
+			fmt.Printf("CallMethod :: key => %v, param => %v \n", key, param)
+			args[key] = reflect.ValueOf(param)
+		}
+
+		// 调用
+		ret := f.Call(args)
+		fmt.Printf("ret => %v\n", ret)
+		if ret[0].Kind() == reflect.String {
+			fmt.Printf("%s Called result: %s\n", method, ret[0].String())
+		} else {
+			fmt.Println("can't call " + method)
+		}
+	}
+	fmt.Println()
+}
+
+// 场景3：获取结构体的tag标记
+func GetTag(t *reflect.Type, field string, tagName string) error {
+	var tagVal string
+	var err error
+
+	fieldVal, ok := (*t).FieldByName(field)
+	if ok {
+		tagVal = fieldVal.Tag.Get(tagName)
+		fmt.Printf("get struct[%s] tag[%s]: %s, error:%v\n", field, tagName, tagVal, err)
+	} else {
+		err = errors.New("no such field name : " + field)
+		fmt.Printf("get struct [%s] tag [%s] : %s, error : %v\n", field, tagName, tagVal, err)
+		return err
+	}
+	return nil
 }
 
 // LearnReflect :
@@ -109,10 +184,16 @@ func LearnReflect() {
 	// interface{} ---------------------> reflect.Value -------------------> interface{}
 	fmt.Printf("reflect.ValueOf(a) => %v\n", reflect.ValueOf(a))
 	fmt.Printf("reflect.ValueOf(a).Interface() => %v\n", reflect.ValueOf(a).Interface())
+	// reflect.ValueOf(a).Interface().(int64)) 使用断言获取底层数据值
+	// panic: interface conversion: interface {} is main.myInt, not int64
+	// fmt.Printf("reflect.ValueOf(a).Interface().(Int64) => %v\n", reflect.ValueOf(a).Interface().(int64))
+	fmt.Printf("reflect.ValueOf(a).Interface().(Int64) => %v\n", reflect.ValueOf(a).Interface().(myInt))
 	fmt.Printf("reflect.ValueOf(b) => %v\n", reflect.ValueOf(b))
 	fmt.Printf("reflect.ValueOf(b).Interface() => %v\n", reflect.ValueOf(b).Interface())
+	fmt.Printf("reflect.ValueOf(b).Interface().(string) => %v\n", reflect.ValueOf(b).Interface().(string))
 	fmt.Printf("reflect.ValueOf(foo) => %v\n", reflect.ValueOf(foo))
 	fmt.Printf("reflect.ValueOf(foo).Interface() => %v\n", reflect.ValueOf(foo).Interface())
+	fmt.Printf("reflect.ValueOf(foo).Interface().(Foo) => %v\n", reflect.ValueOf(foo).Interface().(Foo))
 
 	fmt.Println("reflect.ValueOf.Field-------------------------------------------")
 
@@ -136,6 +217,7 @@ func LearnReflect() {
 		// reason: Name & Age are private in Foo
 		// reflect can not get a private value.
 		// chage Foo.name -> Foo.Name, Foo.age -> Foo.Age
+		fmt.Printf("reflect.ValueOf().Field(%d).IsValid() => %v\n", i, fv.IsValid())
 		fmt.Printf("Foo.%s static type is : %s, underlying type is %v, value is %v\n", ft.Name, fv.Type(), fv.Kind(), fv.Interface())
 		// 如果这里用ft.Kind()就会报错，原因是：
 		// reflect.ValueOf.Field()返回的是一个reflect.Value，是有Kind方法的
@@ -176,4 +258,47 @@ func LearnReflect() {
 	// fmt.Println(ret)
 	// 这样赋值调用会报错，说没有实现对应的接口，暂时还没理解，后面再研究。
 	fmt.Println(reflect.ValueOf(foo).MethodByName("String").Call([]reflect.Value{}))
+
+	fmt.Println("反射应用场景-------------------------------------------")
+
+	type Acct struct {
+		AcctId   int    `json:"acct_id" bson:"acct_id"`
+		AcctName string `json:"acct_name" bson:"acct_name"`
+	}
+
+	acct := &Acct{AcctId: 23, AcctName: "Li Jie"}
+	// by json
+	acctInfo, err := json.Marshal(acct)
+	// j1 => [123 34 97 99 99 116 95 105 100 34 58 50 51 44 34 97 99 99 116 95 110 97 109 101 34 58 34 76 105 32 74 105 101 34 125]
+	// usage string(j) to print
+	fmt.Printf("%v %v\n\n", string(acctInfo), err)
+
+	// get tag of struct by reflect
+	// refletc.ValueOf()没有tag属性
+	t := reflect.TypeOf(acct)
+	field := t.Elem().Field(0)
+	fmt.Printf("reflect.TypeOf(acct).Elem().Field(0).Tag.Get(\"json\") = > %v\n", field.Tag.Get("json"))
+	fmt.Printf("reflect.TypeOf(acct).Elem().Field(0).Tag.Get(\"bson\") = > %v\n", field.Tag.Get("bson"))
+
+	fmt.Println()
+
+	// conf := &Conf{}
+	// then tconf := reflect.TypeOf(conf) will panic: reflect: NumField of non-struct type
+	conf := Conf{}
+	opName := "Create"
+	conf.OpName = &opName
+	conf.Port = 13306
+
+	tconf := reflect.TypeOf(conf)
+	// 如果 func (conf *Conf) ShowOpName(subname string) string {}，则如果调用
+	vconf := reflect.ValueOf(&conf)
+	// 如果 func (conf Conf) ShowOpName(subname string) string {}，则如果调用，否则方法调用不到
+	// vconf := reflect.ValueOf(conf)
+	PrintStructField(&tconf)
+	CallMethod(&vconf, "ShowOpName", []interface{}{"test"})
+	err = GetTag(&tconf, "OpName", "json")
+	err = GetTag(&tconf, "OpName", "xml")
+	err = GetTag(&tconf, "DbPort", "json")
+	err = GetTag(&tconf, "OpName", "bson")
+
 }
