@@ -58,7 +58,7 @@ func LearnAnonymousFunc() {
 		Conclusion: We see that the life cycle of a variable is not determined by
 		its scope: after squares returns, the variable x still implicitly exists in f2.
 
-		This is almost like closure in python language.a
+		This is almost like closure in python language.
 
 		In addition, compare Squares1 and Squares2, we find that variable assignment in outer
 		function (x = x + 1) can affect the inner func one tiems, when f1 := Squares1() called.a

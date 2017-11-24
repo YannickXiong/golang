@@ -13,5 +13,7 @@ func main() {
 
 	// LearnDefer()
 	// LearnSpecial()
-	LearnReflect()
+	//LearnReflect()
+	// LearnConcurrent()
+	LearnChannel()
 }

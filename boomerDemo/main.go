@@ -9,10 +9,11 @@
 package main
 
 import (
-	"boomer"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/myzhan/boomer"
 )
 
 func now() int64 {
