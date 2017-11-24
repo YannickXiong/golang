@@ -13,14 +13,15 @@ import (
 
 func LearnChannel() {
 
+	fmt.Println("---------------------------")
 	chan1 := make(chan int)
 	exit := make(chan bool)
-
-	//
-
+	// Setp :
+	// 	1) 对于无缓冲的channel，不管是写数据(channel<-data)，还是取数据（value<-channel），都会阻塞。
+	//     即channel<-data阻塞，直到有人从channel中取数据；value<-channel也阻塞，直到有人向channel中写数据
 	go func() {
 		for {
-			nTemp := <-chan1
+			nTemp := <-chan1 // 写里写成chan1<-，用写来阻塞，下面改成读是一样的。
 			fmt.Println(nTemp)
 
 			if nTemp == 4 {
@@ -29,32 +30,60 @@ func LearnChannel() {
 			}
 		}
 	}()
-	chan1 <- 1
+	chan1 <- 1 // 上面改成chan1<-，则这里改成<-chan1是一样的
 	chan1 <- 2
 	chan1 <- 3
 	chan1 <- 4
 
-	var bRet bool = <-exit
-	fmt.Println(bRet)
+	// exit已经被写了，但是没被取数据，再次写入会panic
+	// exit <- false
+
+	var bRet bool
+	// 注意不能写成bRet <-exit
+	bRet = <-exit
+	fmt.Printf("bRet => %v\n", bRet)
+
+	// 可以从关闭的channel中取数据，不会阻塞，取出来的数据为类型T的默认值（int =>0, bool => false)
+	// 向一个关闭的channel写数据会panic
 	close(chan1)
+	var iRet int = <-chan1
+	fmt.Printf("iRet => %d\n", iRet)
 
-	// 	chanRan := make(chan int, 4)
-	// 	go func() {
-	// 		for v := range chanRan {
-	// 			fmt.Println(v)
-	// 		}
+	fmt.Println("---------------------------")
 
-	// 		exit <- true
-	// 	}()
+	// 带缓冲的channel，在写满前是不阻塞的。
+	chanRan := make(chan int, 4)
+	go func() {
+		// 注意这里range只返回一个参数
+		// for v := range chanRan {
+		// 	fmt.Println(v)
+		// }
 
-	// 	chanRan <- 5
-	// 	chanRan <- 6
-	// 	chanRan <- 7
-	// 	chanRan <- 8
+		for {
+			i, isClose := <-chanRan
+			if !isClose {
+				fmt.Printf("chanRan is closed!\n")
+				break // 这里必须break，否则当chanRan关闭的时候，这里死循环了
+			} else {
+				fmt.Printf("%d in chanRan \n", i)
+				// break // 这里如果break，则只会从chanRan中取一次数据，即5（满足FIFO）。
+			}
+		}
 
-	// 	close(chanRan)
+		exit <- true
+	}()
 
-	// 	bRet = <-exit
+	chanRan <- 5
+	chanRan <- 6
+	chanRan <- 7
+	chanRan <- 8
+
+	// 这里如果不关闭，则for循环中i, isClose := <-chanRan继续向一个空的chanRan取数据，会deadlock。
+	close(chanRan)
+
+	bRet = <-exit
+
+	fmt.Println("---------------------------")
 
 	// 	chanTimeOut := make(chan bool, 1)
 	// 	chanTest := make(chan int, 1)
