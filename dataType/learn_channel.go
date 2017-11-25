@@ -11,9 +11,42 @@ import (
 	"fmt"
 )
 
+func cf1(in chan int) {
+	fmt.Println("start in cf1 ..")
+	fmt.Println(<-in)
+}
+
+func cf2(msg *string, in chan int) {
+	in <- 1
+	fmt.Println("start in cf2 ..", *msg)
+}
+
 func LearnChannel() {
 
-	fmt.Println("---------------------------")
+	fmt.Println()
+	fmt.Println("## 无缓冲channel：example 1，看上去准备好接收者和发送者，同样会dead lock ##")
+
+	// 注意：
+	// 首先我们知道无缓冲channel，无论读写都会阻塞，直到有人准备好写入或者接收。但是也要分场景，如下
+	// go cf1执行被阻塞，它阻塞的是函数cf1，此时跳出goroutine运行main()中的out <- 0，
+	// 发现写入者，立即恢复阻塞的cf1
+	out := make(chan int)
+	go cf1(out)
+	out <- 0
+	fmt.Println("start outof cf1")
+
+	// out <- 0执行被阻塞，它阻塞的是函数main()，此时跳出goroutine没有东西可运行
+	// 看上去下一步go cf1(out)会准备好接收者，应该会立即恢复out <- 0并执行，但实际上go cf1(out)根本没执行main()就阻塞了
+	// 下面的代码会panic deak lock
+
+	// out := make(chan int)
+	// out <- 0
+	// go cf1(out)
+	// fmt.Println("start outof cf1")
+
+	fmt.Println()
+	fmt.Println("## 无缓冲channel：example 2，基本演示 ##")
+
 	chan1 := make(chan int)
 	exit := make(chan bool)
 	// Setp :
@@ -35,6 +68,8 @@ func LearnChannel() {
 	chan1 <- 3
 	chan1 <- 4
 
+	fmt.Println()
+	fmt.Println("## 无缓冲channel：example 3，可以从关闭的channel取数据，不会阻塞，返回类型T的默认值，但是写入会dead lock ##")
 	// exit已经被写了，但是没被取数据，再次写入会panic
 	// exit <- false
 
@@ -49,26 +84,40 @@ func LearnChannel() {
 	var iRet int = <-chan1
 	fmt.Printf("iRet => %d\n", iRet)
 
-	fmt.Println("---------------------------")
+	fmt.Println()
+	fmt.Println("## 无缓冲channel：example 4，阻塞函数的调用顺序：FILO（不同于从channel中取数据，channel中数据为FIFO ##")
+	in1 := make(chan int)
+	str1 := "hello "
+	str2 := "world"
+	// 如果将go cf2(&str1, in1)写成cf2(&str1, in1)，怎么样都是死锁
+	// 输出如下，跟调用顺序是相反的，函数阻塞类似于defer调用
+	// start in cf2 .. world
+	// start in cf2 .. hello
+	go cf2(&str1, in1)
+	go cf2(&str2, in1)
+	<-in1
+	<-in1
 
+	fmt.Println()
+	fmt.Println("## 带缓冲channel：example 1，for range 或者for i, ok遍历时，怎么关闭channel ##")
 	// 带缓冲的channel，在写满前是不阻塞的。
 	chanRan := make(chan int, 4)
 	go func() {
 		// 注意这里range只返回一个参数
-		// for v := range chanRan {
-		// 	fmt.Println(v)
-		// }
-
-		for {
-			i, isClose := <-chanRan
-			if !isClose {
-				fmt.Printf("chanRan is closed!\n")
-				break // 这里必须break，否则当chanRan关闭的时候，这里死循环了
-			} else {
-				fmt.Printf("%d in chanRan \n", i)
-				// break // 这里如果break，则只会从chanRan中取一次数据，即5（满足FIFO）。
-			}
+		for v := range chanRan {
+			fmt.Println(v)
 		}
+
+		// for {
+		// 	i, isClose := <-chanRan
+		// 	if !isClose {
+		// 		fmt.Printf("chanRan is closed!\n")
+		// 		break // 这里必须break，否则当chanRan关闭的时候，这里死循环了
+		// 	} else {
+		// 		fmt.Printf("%d in chanRan \n", i)
+		// 		// break // 这里如果break，则只会从chanRan中取一次数据，即5（满足FIFO）。
+		// 	}
+		// }
 
 		exit <- true
 	}()
@@ -78,12 +127,22 @@ func LearnChannel() {
 	chanRan <- 7
 	chanRan <- 8
 
-	// 这里如果不关闭，则for循环中i, isClose := <-chanRan继续向一个空的chanRan取数据，会deadlock。
+	// 这里如果不关闭，则for循环中i, isClose := <-chanRan继续向一个空的chanRan取数据，会deadlock。
+	// for range 同样如此。
+	// 如果在生产者-消息费模式中，请一定要生产者处关闭channel，在消费者处关闭channel会引起panic
 	close(chanRan)
 
 	bRet = <-exit
 
-	fmt.Println("---------------------------")
+	fmt.Println(" ##")
+	var c = make(chan int, 1)
+
+	go func() {
+		c <- 'c'
+		fmt.Println("在goroutine内")
+	}()
+	c <- 'c'
+	fmt.Println("在goroutine外")
 
 	// 	chanTimeOut := make(chan bool, 1)
 	// 	chanTest := make(chan int, 1)
