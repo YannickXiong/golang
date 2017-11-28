@@ -160,6 +160,20 @@ func (vwCar VWCar) ShowSeatNum() {
 	fmt.Printf("VWCar::seatNum => %d\n", vwCar.seatNum)
 }
 
+// 可以接收interface{}入参，当然包括string
+func Test1(t interface{}) {
+	fmt.Printf("Test1:: %v\n", t)
+}
+
+// 可以接收[]interface{}入参，只不过初始化参数的时候t2:=[]internface{}{"hello", "world"}，
+// 而不是t2:=[]string{"hello", "world"}
+func Test2(t []interface{}) {
+	for _, item := range t {
+		fmt.Printf("Test2:: %v\n", item)
+	}
+
+}
+
 // LearnInterface :
 func LearnInterface() {
 	fmt.Println("## LearnInterface() called begin ..")
@@ -262,6 +276,15 @@ func LearnInterface() {
 	epi.(*AudiCar).carName = "Audi Q3"
 	fmt.Printf("ei.(AudiCar).carName=>%s\n", ei.(AudiCar).carName)
 	fmt.Printf("epi.(*AudiCar).carName=>%s\n", epi.(*AudiCar).carName)
+
+	str1 := "Test1 hello word"
+	str2 := []interface{}{"Test2 hello word"}
+	Test1(str1)
+	Test2(str2)
+
+	// 会报错
+	// str3 := []string{"Test2 hello word"}
+	// Test2(str3)
 
 	fmt.Println("## LearnInterface() called end ..")
 }
