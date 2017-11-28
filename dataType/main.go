@@ -15,5 +15,7 @@ func main() {
 	// LearnSpecial()
 	// LearnReflect()
 	// LearnConcurrent()
-	LearnChannel()
+	// LearnChannel()
+
+	LearnCallBack()
 }
