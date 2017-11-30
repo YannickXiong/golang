@@ -17,5 +17,6 @@ func main() {
 	// LearnConcurrent()
 	// LearnChannel()
 
-	LearnCallBack()
+	// LearnCallBack()
+	LearnEmptyStruct()
 }
