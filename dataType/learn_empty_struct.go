@@ -53,6 +53,13 @@ func LearnEmptyStruct() {
 
 	fmt.Printf("avpDesc => %v\n", avpDesc)
 	fmt.Printf("size : => %d\n", unsafe.Sizeof(avpDesc))
+	fmt.Printf("size : avpDesc[0]=> %d\n", unsafe.Sizeof(avpDesc[0]))
+	fmt.Printf("size : avpDesc[0].name => %d\n", unsafe.Sizeof(avpDesc[0].name))
+	fmt.Printf("size : avpDesc[0].dataType => %d\n", unsafe.Sizeof(avpDesc[0].dataType))
+	fmt.Printf("size : dataType.String => %d\n", unsafe.Sizeof(avpDesc[0].dataType.String))
+	fmt.Printf("size : avpDesc[0].dataType.String() => %d\n", unsafe.Sizeof(avpDesc[0].dataType.String()))
+	fmt.Printf("size : avpDesc[0].dataType.Value => %d\n", unsafe.Sizeof(avpDesc[0].dataType.Value))
+	fmt.Printf("size : avpDesc[0].dataType.Value() => %d\n", unsafe.Sizeof(avpDesc[0].dataType.Value()))
 
 	var a struct{}
 	var b struct{}
