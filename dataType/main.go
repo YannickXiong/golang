@@ -18,5 +18,6 @@ func main() {
 	// LearnChannel()
 
 	// LearnCallBack()
-	LearnEmptyStruct()
+	// LearnEmptyStruct()
+	LearnCapacity()
 }
