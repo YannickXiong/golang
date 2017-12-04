@@ -164,6 +164,18 @@ func LearnBasicDataType() {
 	*/
 	fmt.Printf("the address of c1 => %v\n", &c1)
 	c1, c2 := "efg", 10
+
+	// How to understand that string is immutable?
+	// s123 is a string, it contains a pointer str which refers to [5]byte data as "hello",
+	// "hello" is a const and immutable.
+	// When s123= "new world", the pointer(str) of s123 refers to [9]byte data as "new world",
+	// string is immutable, means that the data which str refers to can not changeable.
+	// While the str can refers to different data.
+	s123 := "hello"
+	fmt.Printf("addr => %v\n", &s123)
+	s123 = "new world"
+	fmt.Printf("addr => %v\n", &s123)
+
 	/*
 		notice: while c1, c2 := "efg", 10 will not lead to a compile error?
 		we come back to the compile error: no new variables on left side of :=

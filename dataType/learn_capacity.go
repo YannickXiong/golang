@@ -161,7 +161,14 @@ func LearnCapacity() {
 	var spVar *string
 	fmt.Printf("var sVar string \t\t\tSizeof(sVar) = > %d\n", unsafe.Sizeof(sVar))
 	fmt.Printf("var spVar *string \t\t\tSizeof(spVar) = > %d\n", unsafe.Sizeof(spVar))
-	// Sizeof(sVar1) is 16, while len(sVar1) is 35
+	// Sizeof(sVar1) is 16, while len(sVar1) is 35, because string contains a ptr which refers to the actual data [35]byte
+	// and another len() which refers to the actual size 35.
+	// sVar1 --> ptr, 	len()
+	//            |     	 |
+	// 			  \     	 |___ 35
+	// 			   \
+	//   [35]byte "hello world, young man"
+	// more details please see https://www.cnblogs.com/zhangboyu/p/7623712.html
 	var sVar1 = "hello world, young man"
 	var spVar1 = &sVar1
 	fmt.Printf("var sVar1 = \"hello world, young man\" \tSizeof(sVar1) => %d len(sVar1) = > %d\n", unsafe.Sizeof(sVar1), len(sVar1))

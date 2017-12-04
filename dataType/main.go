@@ -19,5 +19,6 @@ func main() {
 
 	// LearnCallBack()
 	// LearnEmptyStruct()
-	LearnCapacity()
+	// LearnCapacity()
+	LearnSwitch()
 }

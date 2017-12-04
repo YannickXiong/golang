@@ -113,7 +113,7 @@ func LearnSlice() {
 	array1[1] += 100 // change array1[1], slice1[0], because slice1 refers to array1
 	slice1[1] += 200 // change array1[2], slice1[1], because slice1[1] refers to array1[2]
 	fmt.Println("\nafter array1[0] += 100 and slice1[1] += 200")
-	fmt.Printf("address of array1 => %p, array is => %d\n", array1, array1)
+	fmt.Printf("address of array1 => %p, array is => %d\n", &array1, array1)
 	// slice1 refers to : also can using %p => &slice1[0]
 	fmt.Printf("slice1 refers to(address of actual array, slice[0] now refers to array1[1]) => %p, slice1 is =>%d\n", slice1, slice1)
 	fmt.Printf("address of slice 1 (address of slice struct) => %p\n", &slice1)
@@ -138,4 +138,19 @@ func LearnSlice() {
 	fmt.Println("## LearnSlice() called end ..")
 	fmt.Println()
 
+}
+
+// init can be redefined, all will be executed, sequentially executed
+// even not called LearnSlice() in main, the init() in learn_slice.go will still be
+// called.
+func init() {
+	fmt.Println("init 1")
+}
+
+func init() {
+	fmt.Println("init 2")
+}
+
+func init() {
+	fmt.Println("init 3")
 }

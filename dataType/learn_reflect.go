@@ -105,6 +105,19 @@ func GetTag(t *reflect.Type, field string, tagName string) error {
 	return nil
 }
 
+// 场景4：用字符串反射实例化结构体
+type RegStructMap map[string]interface{}
+
+func InitStructByName(name string, regStruct RegStructMap) {
+	if regStruct[name] != nil {
+		// t := reflect.ValueOf(regStruct[name]).Type()  // also OK
+		t := reflect.TypeOf(regStruct[name])
+		// func New(typ Type) Value, returns a Value representing a pointer to a new zero value for the specified type
+		v := reflect.New(t).Elem()
+		fmt.Printf("Init struct :: %#v\n", v)
+	}
+}
+
 // LearnReflect :
 func LearnReflect() {
 	var a myInt
@@ -300,5 +313,14 @@ func LearnReflect() {
 	err = GetTag(&tconf, "OpName", "xml")
 	err = GetTag(&tconf, "DbPort", "json")
 	err = GetTag(&tconf, "OpName", "bson")
+
+	// 场景4：用字符串反射实例化结构体
+	var regStruct = make(RegStructMap)
+
+	regStruct["conf"] = Conf{}
+	regStruct["db"] = DB{}
+
+	InitStructByName("db", regStruct)
+	InitStructByName("conf", regStruct)
 
 }
