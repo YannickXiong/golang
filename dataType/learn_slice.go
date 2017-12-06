@@ -102,6 +102,28 @@ func LearnSlice() {
 	s11 := append(s7, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22)
 	fmt.Printf("len of s11 => %d, cap of s11 => %d, s11 =>%d\n\n", len(s11), cap(s11), s11)
 
+	fmt.Println("----- cap test -----")
+	s := make([]int, 5, 7)
+	c := cap(s)
+	for i := 0; i < 50; i++ {
+		// 我在https://play.golang.org/运行相同的代码段，第一次打印的居然是cap:
+		// cap: 7 -> 20
+		// cap: 20 -> 40
+		// cap: 40 -> 80
+		// cap: 80 -> 80
+		// cap: 80 -> 80
+		// cap: 80 -> 80
+		// cap: 80 -> 160
+		// ...
+		s = append(s, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22)
+		if n := cap(s); n >= c {
+			fmt.Printf("cap: %d -> %d\n", c, n)
+			c = n
+		}
+	}
+
+	fmt.Println("----- cap test end -----")
+
 	// trap of append
 	array1 := []int{10, 11, 12, 13, 14}
 	slice1 := array1[1:4]
@@ -137,6 +159,35 @@ func LearnSlice() {
 
 	fmt.Println("## LearnSlice() called end ..")
 	fmt.Println()
+
+	// reslice
+
+	rs := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+	rs1 := rs[2:5]    // [2 3 4], still refers to underlying array of rs
+	rs2 := rs1[2:6:7] // [4 5 6 7], still refers to underlying array of rs
+	//s3 := rs2[3:6]  // Error
+
+	//     		+---+---+---+---+---+---+---+---+---+---+
+	// rs		| 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |       len = 10 cap = 10
+	// 			+---+---+---+---+---+---+---+---+---+---+
+	// 			0       2       4   5
+	//  				+---+---+---+---+---+---+---+---+
+	// rs1				| 2 | 3 | 4 |   |   |   |   |   |       len = 3 未指定，cap = 8
+	// 					+---+---+---+---+---+---+---+---+
+	// 					0   1   2
+	// 							+---+---+---+---+---+
+	// rs2              		| 4 | 5 | 6 | 7 |   |           len = 4 指定cap = 5
+	// 							+---+---+---+---+---+
+	// 							0   1   2   3   4   5
+	// 										+---+---+---+
+	// rs3									| 7 | 8 | x |		out of range of rs2, not range of rs
+	// 										+---+---+---+
+
+	// rs, rs1, rs2 refer to the same underlying array.
+	fmt.Printf("rs => %#v, len => %d, cap => %d, &rs[0] => %p, &rs[2] => %p, &rs[4] => %p\n", rs, len(rs), cap(rs), rs, &rs[2], &rs[4])
+	fmt.Printf("rs1 => %#v, len => %d, cap => %d, refer to %p\n", rs1, len(rs1), cap(rs1), rs1)
+	fmt.Printf("rs2 => %#v, len => %d, cap => %d, refer to %p\n", rs2, len(rs2), cap(rs2), rs2)
+	//fmt.Printf("s3 => %#v", s3)
 
 }
 
