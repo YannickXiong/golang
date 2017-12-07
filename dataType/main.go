@@ -4,7 +4,7 @@ func main() {
 	// LearnBasicDataType()
 	// LearnIota()
 	// LearnArray()
-	LearnSlice()
+	// LearnSlice()
 	// LearnSliceArrayAddress()
 
 	// LearnInterface()
@@ -21,4 +21,8 @@ func main() {
 	// LearnEmptyStruct()
 	// LearnCapacity()
 	// LearnSwitch()
+
+	// LearnMini()
+	// LearnStrings()
+	LearnBufio()
 }
