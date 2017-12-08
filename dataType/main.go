@@ -22,7 +22,7 @@ func main() {
 	// LearnCapacity()
 	// LearnSwitch()
 
-	// LearnMini()
+	LearnMini()
 	// LearnStrings()
-	LearnBufio()
+	// LearnBufio()
 }

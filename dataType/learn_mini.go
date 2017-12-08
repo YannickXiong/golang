@@ -8,7 +8,7 @@ import (
 
 func LearnMini() {
 
-	var filepath = "aaa.conf"
+	var filepath = "aaaa.conf"
 	conf, err := mini.LoadConfiguration(filepath)
 	if err == nil {
 		fmt.Printf("%v\n", conf)
