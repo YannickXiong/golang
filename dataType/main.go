@@ -9,7 +9,7 @@ func main() {
 
 	// LearnInterface()
 	// LearnLogger()
-	// LearnStruct()
+	LearnStruct()
 
 	// LearnDefer()
 	// LearnSpecial()
@@ -22,7 +22,7 @@ func main() {
 	// LearnCapacity()
 	// LearnSwitch()
 
-	LearnMini()
+	// LearnMini()
 	// LearnStrings()
 	// LearnBufio()
 }

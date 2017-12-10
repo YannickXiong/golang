@@ -18,6 +18,16 @@ type Student struct {
 	phone   string
 }
 
+type configItem struct {
+	name  string
+	value map[string]interface{}
+}
+
+type config struct {
+	sectionName string
+	section     map[string]*configItem
+}
+
 // LearnStruct :
 func LearnStruct() {
 	fmt.Println("## LearnSliceArrayAddress() called begin ..")
@@ -48,6 +58,15 @@ func LearnStruct() {
 		age:  24,
 	}
 	fmt.Printf("s3 => %v\n", s3)
+
+	conItem := new(configItem)
+	conf := new(configItem)
+
+	// 对于结构体，new返回指向结构体的指针，结构休内部变量初始化为类型默认值
+	// confItem => &main.configItem{name:"", value:map[string]interface {}(nil)}
+	fmt.Printf("confItem => %#v\n", conItem)
+	// conf => &main.configItem{name:"", value:map[string]interface {}(nil)}
+	fmt.Printf("conf => %#v\n", conf)
 
 	fmt.Println("## LearnSliceArrayAddress() called end ..")
 }
