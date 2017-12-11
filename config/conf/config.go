@@ -60,7 +60,6 @@ func (config *Config) ReloadFromReader(input io.Reader) error {
 		// trim comment info at the end of a stament
 		line = trimComment(line, "#")
 		line = trimComment(line, ";")
-		fmt.Printf("line is :%s\n ", line)
 
 		// comment line, support # && ;
 		if isCommentLine(line, "#") || isCommentLine(line, ";") {
@@ -73,7 +72,6 @@ func (config *Config) ReloadFromReader(input io.Reader) error {
 		}
 
 		sectName, hasSection, err := isSectionLine(line, "[", "]")
-		fmt.Printf("----sectName = > %s\n", sectName)
 		if hasSection {
 			currSectName = sectName
 			confItems := make(map[string]interface{})
@@ -83,10 +81,10 @@ func (config *Config) ReloadFromReader(input io.Reader) error {
 				config.section[currSectName] = new(configSection)
 				config.section[currSectName].confItems = confItems
 				config.section[currSectName].sectionName = currSectName
-			} else if err != nil {
-				// fmt.Printf("errCode = %s, errMsg = %s", err, "section name must be surrounding by '[' and ']'.")
-				return err
 			}
+		} else if err != nil {
+			// fmt.Printf("errCode = %s, errMsg = %s", err, "section name must be surrounding by '[' and ']'.")
+			return err
 		}
 
 		key, value, hasKeyValue, err := isKeyValueLine(line, "=")
@@ -205,11 +203,17 @@ func trimComment(line string, delim string) string {
 	return line
 }
 
+// Configer : interface of Config
 type Configer interface {
 	ToString() string
 	GetSections() []string
+	GetIntegerFromSection(sectionName string, key string, defaultValue int64) int64
+	GetStringrFromSection(sectionName string, key string, defaultValue string) string
+	GetBoolFromSection(sectionName string, key string, defaultValue bool) bool
+	GetFloatFromSection(sectionName string, key string, defaultValue float64) float64
 }
 
+// ToString : convert Config object to string
 func (config *Config) ToString() string {
 	var output string
 	for _, section := range config.GetSections() {
@@ -222,11 +226,12 @@ func (config *Config) ToString() string {
 	return output
 }
 
+// GetSections : get all section names
 func (config *Config) GetSections() []string {
 
 	sections := make([]string, 0)
 
-	for key, _ := range config.section {
+	for key := range config.section {
 		sections = append(sections, key)
 	}
 
