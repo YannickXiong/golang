@@ -9,9 +9,10 @@ import (
 	"strings"
 )
 
+// error code
 var (
-	SectionDelimNotMatch = errors.New("SECTION_DELIM_NOT_MATCH")
-	KeyValueFormatError  = errors.New("KEY_VALUE_FORMAT_ERROR")
+	ErrSectionDelimNotMatch = errors.New("SECTION_DELIM_NOT_MATCH")
+	ErrKeyValueFormat       = errors.New("KEY_VALUE_FORMAT_ERROR")
 )
 
 type configSection struct {
@@ -145,8 +146,8 @@ func isSectionLine(line string, left string, right string) (string, bool, error)
 
 	if strings.HasPrefix(line, left) {
 		if !strings.HasSuffix(line, right) {
-			// return "", false, SectionDelimNotMatch
-			return sectName, isSection, SectionDelimNotMatch
+			// return "", false, ErrSectionDelimNotMatch
+			return sectName, isSection, ErrSectionDelimNotMatch
 		}
 
 		sectName := line[1 : len(line)-1]
@@ -179,7 +180,7 @@ func isKeyValueLine(line string, delim string) (string, string, bool, error) {
 	equalIndex := strings.Index(line, delim)
 
 	if equalIndex <= 0 {
-		return key, value, isKeyValue, KeyValueFormatError
+		return key, value, isKeyValue, ErrKeyValueFormat
 	}
 
 	key = strings.ToLower(strings.TrimSpace(line[:equalIndex]))
