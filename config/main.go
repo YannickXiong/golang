@@ -10,9 +10,9 @@ func main() {
 
 	if err != nil {
 		switch err {
-		case config.SectionDelimNotMatch:
+		case config.ErrSectionDelimNotMatch:
 			fmt.Printf("errCode = %s, errMsg = %s", err, "section name must be surrounding by '[' and ']'.")
-		case config.KeyValueFormatError:
+		case config.ErrKeyValueFormat:
 			fmt.Printf("errCode = %s, errMsg = %s", err, "key and value must be connected by '='.")
 		}
 	} else {

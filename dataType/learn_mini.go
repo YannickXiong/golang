@@ -16,6 +16,7 @@ func LearnMini() {
 
 	// sections := conf.SectionNames()
 	dbPort := conf.IntegerFromSection("db", "port", 23306)
+	logLevel:=conf.DataFromSection("logsize")
 	// fmt.Printf("%v\n", sections)
 	fmt.Printf("dbPort => %v\n", dbPort)
 }
